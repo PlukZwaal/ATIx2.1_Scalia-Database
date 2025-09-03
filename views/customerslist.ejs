@@ -1,0 +1,34 @@
+<%- include('partials/header') %>
+    <h1 class="mb-4">customer Overview</h1>
+    
+    <% if (customers && customers.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% customers.forEach(customer => { %>
+              <tr>
+                <td><%= customer.customer_id %></td>
+                <td><%= customer.first_name %></td>
+                <td><%= customer.last_name %></td>
+                <td><%= customer.email %></td>
+                <td><%= new Date(customer.create_date).toLocaleDateString('nl-NL') %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="alert alert-info" role="alert">
+        No customers found in the database.
+      </div>
+    <% } %>
+<%- include('partials/footer') %>

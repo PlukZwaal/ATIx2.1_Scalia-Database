@@ -7,6 +7,7 @@ const db = require('./config/database');
 
 // Importeer routes
 const customerRoutes = require('./routes/customer');
+const homeRoutes = require('./routes/home');
 
 // Initialiseer Express app
 const app = express();
@@ -24,7 +25,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/', customerRoutes);
+app.use('/', homeRoutes);
+app.use('/klantenlijst', customerRoutes);
 
 // Test databaseverbinding
 async function testConnection() {

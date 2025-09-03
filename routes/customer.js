@@ -18,8 +18,8 @@ router.get('/', async (req, res) => {
     `);
     
     // Render de index pagina met de gebruikersdata
-    res.render('index', { 
-      title: 'Sakila Klantenoverzicht',
+    res.render('customerslist', { 
+      title: 'Klantenlijst',
       customers: customers 
     });
   } catch (error) {
