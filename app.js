@@ -2,11 +2,11 @@ const express = require('express');
 const path = require('path');
 require('dotenv').config();
 
-// Importeer database configuratie
+// Importeer database configuratie met alle gegevens die weer veilig zijn opgeslagen.
 const db = require('./config/database');
 
 // Importeer routes
-const userRoutes = require('./routes/users');
+const customerRoutes = require('./routes/customer');
 
 // Initialiseer Express app
 const app = express();
@@ -24,27 +24,21 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/', userRoutes);
+app.use('/', customerRoutes);
 
-// Test databaseverbinding
 // Test databaseverbinding
 async function testConnection() {
   try {
     const connection = await db.getConnection();
-    console.log('✅ Verbonden met de Sakila database!');
+    console.log('Verbonden met de Sakila database!');
     
-    // Test een eenvoudige query
-    const [rows] = await connection.execute('SELECT COUNT(*) as count FROM user');
-    console.log(`📊 Aantal klanten in database: ${rows[0].count}`);
+    // Een test om te kijken of er wel echt een goede verbinding is 
+    const [rows] = await connection.execute('SELECT COUNT(*) as count FROM customer');
+    console.log(`Aantal klanten in database: ${rows[0].count}`);
     
     connection.release();
   } catch (error) {
-    console.error('❌ Databaseverbinding mislukt:', error.message);
-    console.log('Controleer of:');
-    console.log('1. MySQL server draait');
-    console.log('2. Database naam correct is');
-    console.log('3. Gebruikersnaam en wachtwoord kloppen');
-    console.log('4. De Sakila database is geïmporteerd');
+    console.error('Databaseverbinding mislukt:', error.message);
   }
 }
 

@@ -6,22 +6,21 @@ const db = require('../config/database');
 router.get('/', async (req, res) => {
   try {
     // Query om klanten op te halen (customer viewpoint)
-    const [users] = await db.execute(`
+    const [customers] = await db.execute(`
       SELECT 
-        id,
+        customer_id,
         first_name,
         last_name,
         email,
-        created_at
-      FROM user 
+        create_date
+      FROM customer 
       ORDER BY first_name, last_name
-      LIMIT 50
     `);
     
     // Render de index pagina met de gebruikersdata
     res.render('index', { 
       title: 'Sakila Klantenoverzicht',
-      users: users 
+      customers: customers 
     });
   } catch (error) {
     console.error('Fout bij ophalen gebruikers:', error);

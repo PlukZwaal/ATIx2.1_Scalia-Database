@@ -1,7 +1,7 @@
 <%- include('partials/header') %>
-    <h1 class="mb-4">user Overview</h1>
+    <h1 class="mb-4">customer Overview</h1>
     
-    <% if (users && users.length > 0) { %>
+    <% if (customers && customers.length > 0) { %>
       <div class="table-responsive">
         <table class="table table-striped table-hover">
           <thead class="table-dark">
@@ -14,13 +14,13 @@
             </tr>
           </thead>
           <tbody>
-            <% users.forEach(user => { %>
+            <% customers.forEach(customer => { %>
               <tr>
-                <td><%= user.user_id %></td>
-                <td><%= user.first_name %></td>
-                <td><%= user.last_name %></td>
-                <td><%= user.email %></td>
-                <td><%= new Date(user.created_at).toLocaleDateString('nl-NL') %></td>
+                <td><%= customer.customer_id %></td>
+                <td><%= customer.first_name %></td>
+                <td><%= customer.last_name %></td>
+                <td><%= customer.email %></td>
+                <td><%= new Date(customer.create_date).toLocaleDateString('nl-NL') %></td>
               </tr>
             <% }) %>
           </tbody>
@@ -28,7 +28,7 @@
       </div>
     <% } else { %>
       <div class="alert alert-info" role="alert">
-        No users found in the database.
+        No customers found in the database.
       </div>
     <% } %>
 <%- include('partials/footer') %>
