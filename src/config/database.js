@@ -1,7 +1,6 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Maak een connection pool voor betere performance
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -12,7 +11,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Zet de pool om naar promises voor async/await ondersteuning
 const promisePool = pool.promise();
 
 module.exports = promisePool;

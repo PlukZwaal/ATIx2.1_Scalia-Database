@@ -1,0 +1,72 @@
+<%- include('partials/header') %>
+<h1 class="mb-4">Medewerkerslijst</h1>
+
+<% if (staff && staff.length > 0) { %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Naam</th>
+          <th>Email</th>
+          <th>Winkel</th>
+          <th>Actie</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% staff.forEach(i => { %>
+          <tr>
+            <td><%= i.full_name %></td>
+            <td><%= i.email || '-' %></td>
+            <td><%= i.store_id %></td>
+            <td>
+              <!-- Eye knop opent modal -->
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staffModal<%= i.staff_id %>">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Modal voor medewerker -->
+          <div class="modal fade" id="staffModal<%= i.staff_id %>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Details van <%= i.full_name %></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <ul class="list-group">
+                    <li class="list-group-item"><strong>Email:</strong> <%= i.email || '-' %></li>
+                    <li class="list-group-item"><strong>Username:</strong> <%= i.username %></li>
+                    <li class="list-group-item"><strong>Winkel:</strong> <%= i.store_id %></li>
+                    <li class="list-group-item"><strong>Status:</strong> 
+                      <% if (i.active) { %>
+                        <span class="badge bg-success">Actief</span>
+                      <% } else { %>
+                        <span class="badge bg-danger">Inactief</span>
+                      <% } %>
+                    </li>
+                    <li class="list-group-item"><strong>Adres:</strong> <%= i.address %> <%= i.address2 || '' %>, <%= i.district %></li>
+                    <li class="list-group-item"><strong>Postcode:</strong> <%= i.postal_code %></li>
+                    <li class="list-group-item"><strong>Stad:</strong> <%= i.city %></li>
+                    <li class="list-group-item"><strong>Land:</strong> <%= i.country %></li>
+                    <li class="list-group-item"><strong>Tel:</strong> <%= i.phone %></li>
+                    <li class="list-group-item"><strong>Laatst bijgewerkt:</strong> <%= i.last_update %></li>
+                  </ul>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-warning">Bewerken</button>
+                  <button class="btn btn-danger">Verwijderen</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="alert alert-info">Geen medewerkers gevonden.</div>
+<% } %>
+<%- include('partials/footer') %>
