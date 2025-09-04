@@ -8,6 +8,7 @@ const customerRoutes = require('./src/routes/customer');
 const staffRoutes = require('./src/routes/staff');
 const homeRoutes = require('./src/routes/home');
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', homeRoutes);
+app.use('/userid/:userid', homeRoutes);
 app.use('/klantenlijst', customerRoutes);
 app.use('/medewerkerlijst', staffRoutes);
 
