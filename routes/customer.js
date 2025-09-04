@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 
-// Haal alle gebruikers op vanuit de database
 router.get('/', async (req, res) => {
   try {
-    // Query om klanten op te halen (customer viewpoint)
     const [customers] = await db.execute(`
       SELECT 
         customer_id,
@@ -17,7 +15,6 @@ router.get('/', async (req, res) => {
       ORDER BY first_name, last_name
     `);
     
-    // Render de index pagina met de gebruikersdata
     res.render('customerslist', { 
       title: 'Klantenlijst',
       customers: customers 
