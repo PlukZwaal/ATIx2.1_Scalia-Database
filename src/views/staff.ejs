@@ -19,14 +19,13 @@
             <td><%= i.email || '-' %></td>
             <td><%= i.store_id %></td>
             <td>
-              <!-- Eye knop opent modal -->
               <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#staffModal<%= i.staff_id %>">
                 <i class="bi bi-eye-fill"></i>
               </button>
             </td>
           </tr>
 
-          <!-- Modal voor medewerker -->
+          <!-- Modal -->
           <div class="modal fade" id="staffModal<%= i.staff_id %>" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
               <div class="modal-content">
@@ -47,7 +46,7 @@
                       <% } %>
                     </li>
                     <li class="list-group-item"><strong>Adres:</strong> <%= i.address %> <%= i.address2 || '' %>, <%= i.district %></li>
-<li class="list-group-item"><strong>Postcode:</strong> <%= i.postal_code || '-' %></li>
+                    <li class="list-group-item"><strong>Postcode:</strong> <%= i.postal_code %></li>
                     <li class="list-group-item"><strong>Stad:</strong> <%= i.city %></li>
                     <li class="list-group-item"><strong>Land:</strong> <%= i.country %></li>
                     <li class="list-group-item"><strong>Tel:</strong> <%= i.phone %></li>
@@ -57,6 +56,7 @@
                 <div class="modal-footer">
                   <button class="btn btn-warning">Bewerken</button>
                   <button class="btn btn-danger">Verwijderen</button>
+                  <button class="btn btn-secondary" data-bs-dismiss="modal">Sluiten</button>
                 </div>
               </div>
             </div>
