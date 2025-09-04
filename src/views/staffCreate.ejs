@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+  <h1 class="mb-4">Nieuwe medewerker</h1>
+
+  <form action="/staff/create" method="POST">
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Voornaam</strong></label>
+      <input type="text" name="first_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Achternaam</strong></label>
+      <input type="text" name="last_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Email</strong></label>
+      <input type="email" name="email" class="form-control" placeholder="optioneel">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Username</strong></label>
+      <input type="text" name="username" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Adres</strong></label>
+      <input type="text" name="address" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Adres 2</strong></label>
+      <input type="text" name="address2" class="form-control" placeholder="optioneel">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>District</strong></label>
+      <input type="text" name="district" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Stad</strong></label>
+      <select name="city_id" class="form-select" required>
+        <% cities.forEach(c => { %>
+          <option value="<%= c.city_id %>"><%= c.city %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Postcode</strong></label>
+      <input type="text" name="postal_code" class="form-control" placeholder="optioneel">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Telefoon</strong></label>
+      <input type="text" name="phone" class="form-control" placeholder="optioneel">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Store</strong></label>
+      <select name="store_id" class="form-select" required>
+        <% stores.forEach(s => { %>
+          <option value="<%= s.store_id %>">Store <%= s.store_id %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Status</strong></label>
+      <select name="active" class="form-select" required>
+        <option value="1">Actief</option>
+        <option value="0">Inactief</option>
+      </select>
+    </div>
+
+    <div class="mt-4 text-end">
+      <button type="submit" class="btn btn-primary me-2">Aanmaken</button>
+      <a href="/staff" class="btn btn-secondary">Annuleren</a>
+    </div>
+
+  </form>
+</div>
+
+<%- include('partials/footer') %>

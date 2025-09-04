@@ -1,21 +1,21 @@
 <%- include('partials/header') %>
-<h1 class="mb-4">Staff List</h1>
+<h1 class="mb-4">Medewerkerslijst</h1>
 
 <% if (staff && staff.length > 0) { %>
   <div class="table-responsive">
     <table class="table table-hover align-middle">
       <thead class="table-dark">
         <tr>
-          <th>Name</th>
+          <th>Naam</th>
           <th>Email</th>
-          <th>Store</th>
-          <th>Action</th>
+          <th>Winkel</th>
+          <th>Actie</th>
         </tr>
       </thead>
       <tbody>
         <% staff.forEach(i => { %>
           <tr>
-            <td><%= i.first_name + ' ' + i.last_name %></td>
+            <td><%= i.full_name %></td>
             <td><%= i.email || '-' %></td>
             <td><%= i.store_id %></td>
             <td>
@@ -29,6 +29,6 @@
     </table>
   </div>
 <% } else { %>
-  <div class="alert alert-info">No staff found.</div>
+  <div class="alert alert-info">Geen medewerkers gevonden.</div>
 <% } %>
 <%- include('partials/footer') %>

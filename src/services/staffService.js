@@ -1,13 +1,11 @@
 const staffDao = require('../dao/staffDao');
 
 const staffService = {
-  getAll: async () => {
-    return await staffDao.getAll();
-  },
-
-  getById: async (id) => {
-    return await staffDao.getById(id);
-  },
+  getAll: () => staffDao.getAll(),
+  getById: (id) => staffDao.getById(id),
+  getStores: () => staffDao.getStores(),
+  getCities: () => staffDao.getCities(),
+  create: (data) => staffDao.create(data),
 };
 
 module.exports = staffService;
