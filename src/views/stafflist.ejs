@@ -47,7 +47,7 @@
                       <% } %>
                     </li>
                     <li class="list-group-item"><strong>Adres:</strong> <%= i.address %> <%= i.address2 || '' %>, <%= i.district %></li>
-                    <li class="list-group-item"><strong>Postcode:</strong> <%= i.postal_code %></li>
+<li class="list-group-item"><strong>Postcode:</strong> <%= i.postal_code || '-' %></li>
                     <li class="list-group-item"><strong>Stad:</strong> <%= i.city %></li>
                     <li class="list-group-item"><strong>Land:</strong> <%= i.country %></li>
                     <li class="list-group-item"><strong>Tel:</strong> <%= i.phone %></li>
