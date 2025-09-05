@@ -17,7 +17,7 @@
 
     <div class="mb-3">
       <label class="form-label"><strong>Email</strong></label>
-      <input type="email" name="email" class="form-control" placeholder="optioneel">
+      <input type="email" name="email" class="form-control" required>
     </div>
 
     <div class="mb-3">
@@ -44,19 +44,19 @@
       <label class="form-label"><strong>Stad</strong></label>
       <select name="city_id" class="form-select" required>
         <% cities.forEach(c => { %>
-          <option value="<%= c.city_id %>"><%= c.city %></option>
+          <option value="<%= c.city_id %>"><%= c.city %></option required>
         <% }) %>
       </select>
     </div>
 
     <div class="mb-3">
       <label class="form-label"><strong>Postcode</strong></label>
-      <input type="text" name="postal_code" class="form-control" placeholder="optioneel">
+      <input type="text" name="postal_code" class="form-control" required>
     </div>
 
     <div class="mb-3">
       <label class="form-label"><strong>Telefoon</strong></label>
-      <input type="text" name="phone" class="form-control" placeholder="optioneel">
+      <input type="text" name="phone" class="form-control" required>
     </div>
 
     <div class="mb-3">

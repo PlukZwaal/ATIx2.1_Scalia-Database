@@ -15,7 +15,7 @@
       <tbody>
         <% staff.forEach(i => { %>
           <tr>
-            <td><%= i.full_name %></td>
+            <td><%= i.first_name %> <%= i.last_name %></td>
             <td><%= i.email || '-' %></td>
             <td><%= i.store_id %></td>
             <td>
