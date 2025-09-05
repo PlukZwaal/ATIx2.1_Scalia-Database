@@ -1,93 +1,146 @@
 const pool = require("../db/database");
 
 module.exports = {
-  async getAll() {
-    const [rows] = await pool.execute(
+  getAll(callback) {
+    pool.execute(
       `SELECT s.staff_id, s.first_name, s.last_name, s.email, s.store_id, s.active,
-              a.address, a.district, c.city, co.country, s.username, s.last_update
+              a.address, a.district, c.city, co.country, s.username, s.last_update,
+              CONCAT(s.first_name, ' ', s.last_name) as full_name
        FROM staff s
        JOIN address a ON s.address_id = a.address_id
        JOIN city c ON a.city_id = c.city_id
-       JOIN country co ON c.country_id = co.country_id`
+       JOIN country co ON c.country_id = co.country_id`,
+      (err, rows) => {
+        if (err) {
+          console.error('Database error in getAll:', err);
+          return callback(err, null);
+        }
+        console.log('Raw database result:', rows);
+        callback(null, rows);
+      }
     );
-    return rows;
   },
 
-  async getById(id) {
-    const [rows] = await pool.execute(
+  getById(id, callback) {
+    pool.execute(
       `SELECT s.staff_id, s.first_name, s.last_name, s.email, s.store_id, s.active,
-              a.address, a.district, c.city, co.country, s.username, s.last_update
+              a.address, a.address2, a.district, c.city, co.country, s.username, s.last_update, a.postal_code, a.phone,
+              CONCAT(s.first_name, ' ', s.last_name) as full_name
        FROM staff s
        JOIN address a ON s.address_id = a.address_id
        JOIN city c ON a.city_id = c.city_id
        JOIN country co ON c.country_id = co.country_id
        WHERE s.staff_id = ?`,
-      [id]
+      [id],
+      (err, rows) => {
+        if (err) {
+          console.error('Database error in getById:', err);
+          return callback(err, null);
+        }
+        callback(null, rows[0]);
+      }
     );
-    return rows[0];
   },
 
-  async create(data) {
-    const conn = await pool.getConnection();
-    try {
-      await conn.beginTransaction();
+  create(data, callback) {
+    pool.getConnection((err, conn) => {
+      if (err) {
+        console.error('Connection error:', err);
+        return callback(err, null);
+      }
 
-      const [addrRes] = await conn.execute(
-        `INSERT INTO address 
-          (address, address2, district, city_id, postal_code, phone, location, last_update)
-         VALUES (?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(0 0)'), NOW())`,
-        [
-          data.address,
-          data.address2 || null,
-          data.district,
-          data.city_id,
-          data.postal_code,
-          data.phone,
-        ]
-      );
+      conn.beginTransaction((err) => {
+        if (err) {
+          conn.release();
+          return callback(err, null);
+        }
 
-      const addressId = addrRes.insertId;
+        // Eerst address aanmaken
+        conn.execute(
+          `INSERT INTO address 
+            (address, address2, district, city_id, postal_code, phone, location, last_update)
+           VALUES (?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(0 0)'), NOW())`,
+          [
+            data.address,
+            data.address2 || null,
+            data.district,
+            data.city_id,
+            data.postal_code,
+            data.phone,
+          ],
+          (err, addrRes) => {
+            if (err) {
+              return conn.rollback(() => {
+                conn.release();
+                callback(err, null);
+              });
+            }
 
-      const [staffRes] = await conn.execute(
-        `INSERT INTO staff 
-          (first_name, last_name, address_id, email, store_id, active, username, password, last_update)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
-        [
-          data.first_name,
-          data.last_name,
-          addressId,
-          data.email,
-          data.store_id,
-          data.active ?? 1,
-          data.username,
-          data.password || "default123", 
-        ]
-      );
+            const addressId = addrRes.insertId;
 
-      await conn.commit();
-      return { staff_id: staffRes.insertId, address_id: addressId };
-    } catch (err) {
-      await conn.rollback();
-      throw err;
-    } finally {
-      conn.release();
-    }
+            // Dan staff aanmaken
+            conn.execute(
+              `INSERT INTO staff 
+                (first_name, last_name, address_id, email, store_id, active, username, password, last_update)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+              [
+                data.first_name,
+                data.last_name,
+                addressId,
+                data.email,
+                data.store_id,
+                data.active ?? 1,
+                data.username,
+                data.password || "default123",
+              ],
+              (err, staffRes) => {
+                if (err) {
+                  return conn.rollback(() => {
+                    conn.release();
+                    callback(err, null);
+                  });
+                }
+
+                conn.commit((err) => {
+                  conn.release();
+                  if (err) {
+                    return callback(err, null);
+                  }
+                  callback(null, { staff_id: staffRes.insertId, address_id: addressId });
+                });
+              }
+            );
+          }
+        );
+      });
+    });
   },
 
-  async getStores() {
-    const [rows] = await pool.execute(
+  getStores(callback) {
+    pool.execute(
       `SELECT s.store_id, a.address
        FROM store s
-       JOIN address a ON s.address_id = a.address_id`
+       JOIN address a ON s.address_id = a.address_id`,
+      (err, rows) => {
+        if (err) {
+          console.error('Database error in getStores:', err);
+          return callback(err, null);
+        }
+        callback(null, rows);
+      }
     );
-    return rows;
   },
 
-  async getCities() {
-    const [rows] = await pool.execute(
-      `SELECT city_id, city FROM city`
+  getCities(callback) {
+    pool.execute(
+      `SELECT city_id, city FROM city`,
+      (err, rows) => {
+        if (err) {
+          console.error('Database error in getCities:', err);
+          return callback(err, null);
+        }
+        callback(null, rows);
+      }
     );
-    return rows;
   }
-
 };
