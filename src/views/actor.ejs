@@ -1,25 +1,24 @@
 <%- include('partials/header') %>
-<h1 class="mb-4">Medewerkerslijst</h1>
-
-<% if (staff && staff.length > 0) { %>
+<h1 class="mb-4">Acteurslijst</h1>
+<% if (actor && actor.length > 0) { %>
   <div class="table-responsive">
     <table class="table table-hover align-middle">
       <thead class="table-dark">
         <tr>
           <th>Naam</th>
-          <th>Email</th>
-          <th>Winkel</th>
+          <th>Voornaam</th>
+          <th>Achternaam</th>
           <th>Actie</th>
         </tr>
       </thead>
       <tbody>
-        <% staff.forEach(i => { %>
+        <% actor.forEach(i => { %>
           <tr>
             <td><%= i.first_name %> <%= i.last_name %></td>
-            <td><%= i.email || '-' %></td>
-            <td><%= i.store_id %></td>
+            <td><%= i.first_name %></td>
+            <td><%= i.last_name %></td>
             <td>
-              <a href="/staff/<%= i.staff_id %>" class="btn btn-sm btn-outline-primary">
+              <a href="/actor/<%= i.actor_id %>" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-eye-fill"></i>
               </a>
             </td>
@@ -29,6 +28,6 @@
     </table>
   </div>
 <% } else { %>
-  <div class="alert alert-info">Geen medewerkers gevonden.</div>
+  <div class="alert alert-info">Geen acteurs gevonden.</div>
 <% } %>
 <%- include('partials/footer') %>
