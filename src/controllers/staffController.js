@@ -11,7 +11,6 @@ const staffController = {
   },
 
   showCreateForm: (req, res, next) => {
-    // Eerst stores ophalen
     staffService.getStores((err, stores) => {
       if (err) {
         return next(err);
