@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const homeRoutes = require('./src/routes/home');
 const staffRouter = require('./src/routes/staff');
+const { logger } = require('./src/util/logger'); // <-- aangepast
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,5 +21,5 @@ app.use('/', homeRoutes);
 app.use('/staff', staffRouter);
 
 app.listen(PORT, () => {
-  console.log(`Server is live op http://localhost:${PORT}`);
+  logger.info(`Server is live op http://localhost:${PORT}`);
 });
