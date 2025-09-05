@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+
+<h1>Fout</h1>
+
+<% if (error && error.status) { %>
+  <p><strong>Status:</strong> <%= error.status %></p>
+<% } %>
+
+<% if (error && error.message) { %>
+  <p><strong>Bericht:</strong> <%= error.message %></p>
+<% } else { %>
+  <p>Er is een fout opgetreden.</p>
+<% } %>
+
+<a href="/">Terug naar home</a>
+
+<%- include('partials/footer') %>

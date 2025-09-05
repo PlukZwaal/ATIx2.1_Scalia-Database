@@ -20,6 +20,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', homeRoutes);
 app.use('/actor', actorRouter);
 
+app.use((err, req, res, next) => {
+  const error = {
+    status: err.status || 500,
+    message: err.message || 'Er is een onbekende fout opgetreden'
+  };
+  
+  logger.error(`Error ${error.status}: ${error.message}`);
+  
+  res.status(error.status).render('error', { 
+    title: 'Fout', 
+    error: error 
+  });
+});
+
+app.use((req, res) => {
+  res.status(404).render('error', { 
+    title: 'Pagina niet gevonden', 
+    error: { 
+      status: 404, 
+      message: 'De opgevraagde pagina bestaat niet.' 
+    } 
+  });
+});
+
 app.listen(PORT, () => {
   logger.info(`Server is live op http://localhost:${PORT}`);
 });

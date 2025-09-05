@@ -18,7 +18,9 @@ const actorController = {
         return next(err);
       }
       if (!actor) {
-        return res.status(404).send('Actor not found');
+        const error = new Error('Acteur niet gevonden');
+        error.status = 404;
+        return next(error);
       }
       
       actorService.getFilmsByActorId(actorId, (err, films) => {
