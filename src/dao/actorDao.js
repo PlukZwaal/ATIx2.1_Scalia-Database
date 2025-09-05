@@ -3,10 +3,18 @@ const pool = require("../db/database");
 module.exports = {
   getAll(callback) {
     pool.execute(
-      `SELECT actor_id, first_name, last_name, last_update,
-              CONCAT(first_name, ' ', last_name) as full_name
-       FROM actor 
-       ORDER BY last_name ASC, first_name ASC`,
+      `SELECT
+         a.actor_id,
+         CONCAT(a.first_name, ' ', a.last_name) AS full_name,
+         COUNT(fa.film_id) AS film_count
+       FROM
+         actor a
+       LEFT JOIN
+         film_actor fa ON a.actor_id = fa.actor_id
+       GROUP BY
+         a.actor_id
+       ORDER BY
+         a.first_name ASC, a.last_name ASC`,
       (err, rows) => {
         if (err) {
           console.error('Database error in getAll:', err);
@@ -17,13 +25,14 @@ module.exports = {
       }
     );
   },
+
   
   getById(id, callback) {
     pool.execute(
       `SELECT a.actor_id, a.first_name, a.last_name, a.last_update,
               CONCAT(a.first_name, ' ', a.last_name) as full_name
-       FROM actor a
-       WHERE a.actor_id = ?`,
+        FROM actor a
+        WHERE a.actor_id = ?`,
       [id],
       (err, rows) => {
         if (err) {
@@ -40,12 +49,12 @@ module.exports = {
     pool.execute(
       `SELECT f.film_id, f.title, f.description, f.release_year, f.length, 
               f.rating, c.name as category_name
-       FROM film f
-       JOIN film_actor fa ON f.film_id = fa.film_id
-       LEFT JOIN film_category fc ON f.film_id = fc.film_id
-       LEFT JOIN category c ON fc.category_id = c.category_id
-       WHERE fa.actor_id = ?
-       ORDER BY f.title ASC`,
+        FROM film f
+        JOIN film_actor fa ON f.film_id = fa.film_id
+        LEFT JOIN film_category fc ON f.film_id = fc.film_id
+        LEFT JOIN category c ON fc.category_id = c.category_id
+        WHERE fa.actor_id = ?
+        ORDER BY f.title ASC`,
       [id],
       (err, rows) => {
         if (err) {

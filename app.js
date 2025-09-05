@@ -3,7 +3,6 @@ const path = require('path');
 require('dotenv').config();
 
 const homeRoutes = require('./src/routes/home');
-const staffRouter = require('./src/routes/staff');
 const actorRouter = require('./src/routes/actor')
 const { logger } = require('./src/util/logger');
 
@@ -19,7 +18,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', homeRoutes);
-app.use('/staff', staffRouter);
 app.use('/actor', actorRouter);
 
 app.listen(PORT, () => {

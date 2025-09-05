@@ -21,11 +21,9 @@ const actorController = {
         return res.status(404).send('Actor not found');
       }
       
-      // Haal ook de films op waarin deze acteur speelt
       actorService.getFilmsByActorId(actorId, (err, films) => {
         if (err) {
           console.error('Error fetching films for actor:', err);
-          // Als er een fout is bij films, render dan alsnog maar met lege films array
           films = [];
         }
         
