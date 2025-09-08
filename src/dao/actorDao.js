@@ -66,4 +66,30 @@ module.exports = {
       }
     );
   },
+
+  create(actorData, callback) {
+    const { first_name, last_name } = actorData;
+    
+    pool.execute(
+      `INSERT INTO actor (first_name, last_name, last_update) 
+       VALUES (?, ?, NOW())`,
+      [first_name, last_name],
+      (err, result) => {
+        if (err) {
+          console.error('Database error in create:', err);
+          return callback(err, null);
+        }
+        
+        const newActor = {
+          actor_id: result.insertId,
+          first_name: first_name,
+          last_name: last_name,
+          full_name: `${first_name} ${last_name}`
+        };
+        
+        console.log('Actor created successfully:', newActor);
+        callback(null, newActor);
+      }
+    );
+  }
 };
