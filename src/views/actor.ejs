@@ -16,18 +16,19 @@
           <tr>
             <td><%= i.actor_id %></td>
             <td><%= i.full_name %></td>
-            <td><%= i.film_count %>               
-              <a href="/actor/<%= i.actor_id %>" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-eye-fill"></i>
-              </a>
-            </td>
+            <td><%= i.film_count %></td>
             <td>
-              <button class="btn btn-sm btn-outline-warning" disabled>
-                <i class="bi bi-pencil-fill"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger" disabled>
-                <i class="bi bi-trash-fill"></i>
-              </button>
+              <div class="btn-group" role="group">
+                <a href="/actor/<%= i.actor_id %>" class="btn btn-sm btn-outline-primary" title="Bekijk details">
+                  <i class="bi bi-eye-fill"></i>
+                </a>
+                <a href="/actor/<%= i.actor_id %>/edit" class="btn btn-sm btn-outline-warning" title="Bewerk acteur">
+                  <i class="bi bi-pencil-fill"></i>
+                </a>
+                <button class="btn btn-sm btn-outline-danger" disabled title="Verwijderen (niet beschikbaar)">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
             </td>
           </tr>
         <% }) %>

@@ -50,6 +50,7 @@ const actorController = {
     const { first_name, last_name } = req.body;
     const errors = [];
 
+    // Validatie
     if (!first_name || first_name.trim().length === 0) {
       errors.push('Voornaam is verplicht');
     }
@@ -75,7 +76,80 @@ const actorController = {
         return next(err);
       }
       
+      // Redirect naar de detail pagina van de nieuwe acteur
       res.redirect(`/actor/${newActor.actor_id}`);
+    });
+  },
+
+  getEditForm: (req, res, next) => {
+    const actorId = Number(req.params.id);
+    
+    actorService.getById(actorId, (err, actor) => {
+      if (err) {
+        return next(err);
+      }
+      if (!actor) {
+        const error = new Error('Acteur niet gevonden');
+        error.status = 404;
+        return next(error);
+      }
+      
+      res.render('actorEdit', {
+        title: `${actor.full_name} Bewerken`,
+        actor: actor,
+        errors: [],
+        formData: {
+          first_name: actor.first_name,
+          last_name: actor.last_name
+        }
+      });
+    });
+  },
+
+  update: (req, res, next) => {
+    const actorId = Number(req.params.id);
+    const { first_name, last_name } = req.body;
+    const errors = [];
+
+    // Validatie
+    if (!first_name || first_name.trim().length === 0) {
+      errors.push('Voornaam is verplicht');
+    }
+    if (!last_name || last_name.trim().length === 0) {
+      errors.push('Achternaam is verplicht');
+    }
+
+    if (errors.length > 0) {
+      // Haal actor data op voor de form
+      return actorService.getById(actorId, (err, actor) => {
+        if (err) return next(err);
+        if (!actor) {
+          const error = new Error('Acteur niet gevonden');
+          error.status = 404;
+          return next(error);
+        }
+
+        res.render('actorEdit', {
+          title: `${actor.full_name} Bewerken`,
+          actor: actor,
+          errors: errors,
+          formData: { first_name, last_name }
+        });
+      });
+    }
+
+    const actorData = {
+      first_name: first_name.trim(),
+      last_name: last_name.trim()
+    };
+
+    actorService.update(actorId, actorData, (err, updatedActor) => {
+      if (err) {
+        return next(err);
+      }
+      
+      // Redirect naar de detail pagina van de bewerkte acteur
+      res.redirect(`/actor/${actorId}`);
     });
   }
 };

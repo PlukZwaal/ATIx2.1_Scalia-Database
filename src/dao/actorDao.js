@@ -80,6 +80,7 @@ module.exports = {
           return callback(err, null);
         }
         
+        // Return the created actor with the new ID
         const newActor = {
           actor_id: result.insertId,
           first_name: first_name,
@@ -89,6 +90,40 @@ module.exports = {
         
         console.log('Actor created successfully:', newActor);
         callback(null, newActor);
+      }
+    );
+  },
+
+  update(id, actorData, callback) {
+    const { first_name, last_name } = actorData;
+    
+    pool.execute(
+      `UPDATE actor 
+       SET first_name = ?, last_name = ?, last_update = NOW()
+       WHERE actor_id = ?`,
+      [first_name, last_name, id],
+      (err, result) => {
+        if (err) {
+          console.error('Database error in update:', err);
+          return callback(err, null);
+        }
+        
+        if (result.affectedRows === 0) {
+          const error = new Error('Acteur niet gevonden');
+          error.status = 404;
+          return callback(error, null);
+        }
+        
+        // Return the updated actor data
+        const updatedActor = {
+          actor_id: id,
+          first_name: first_name,
+          last_name: last_name,
+          full_name: `${first_name} ${last_name}`
+        };
+        
+        console.log('Actor updated successfully:', updatedActor);
+        callback(null, updatedActor);
       }
     );
   }
