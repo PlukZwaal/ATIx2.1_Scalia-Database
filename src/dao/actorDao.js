@@ -20,7 +20,6 @@ module.exports = {
           console.error('Database error in getAll:', err);
           return callback(err, null);
         }
-        console.log('Raw database result:', rows);
         callback(null, rows);
       }
     );
