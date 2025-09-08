@@ -1,31 +1,8 @@
 <%- include('partials/header') %>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="mb-4">
   <h1>Acteurslijst -> <%= actor.full_name %></h1>
-  <div>
-    <a href="/actor/<%= actor.actor_id %>/edit" class="btn btn-warning me-2">
-      <i class="bi bi-pencil-fill"></i> Bewerk Acteur
-    </a>
-    <a href="/actor" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Terug naar Acteurslijst
-    </a>
-  </div>
-</div>
-
-<div class="row mb-4">
-  <div class="col-md-8">
-    <p>Hieronder zie je een lijst met alle films waar in <strong><%= actor.full_name %></strong> heeft gespeelt.</p>
-  </div>
-  <div class="col-md-4">
-    <div class="card bg-light">
-      <div class="card-body">
-        <h6 class="card-title">Acteurgegevens</h6>
-        <p class="card-text mb-1"><strong>ID:</strong> <%= actor.actor_id %></p>
-        <p class="card-text mb-1"><strong>Voornaam:</strong> <%= actor.first_name %></p>
-        <p class="card-text mb-0"><strong>Achternaam:</strong> <%= actor.last_name %></p>
-      </div>
-    </div>
-  </div>
+  <p>Hieronder zie je een lijst met alle films waar in <strong><%= actor.full_name %></strong> heeft gespeelt.</p>
 </div>
 
 <div class="card-body">

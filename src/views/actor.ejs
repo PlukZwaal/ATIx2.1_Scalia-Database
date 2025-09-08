@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         <% actor.forEach(i => { %>
-          <tr>
+          <tr id="actor-row-<%= i.actor_id %>">
             <td><%= i.actor_id %></td>
             <td><%= i.full_name %></td>
             <td><%= i.film_count %></td>
@@ -25,7 +25,9 @@
                 <a href="/actor/<%= i.actor_id %>/edit" class="btn btn-sm btn-outline-warning" title="Bewerk acteur">
                   <i class="bi bi-pencil-fill"></i>
                 </a>
-                <button class="btn btn-sm btn-outline-danger" disabled title="Verwijderen (niet beschikbaar)">
+                <button class="btn btn-sm btn-outline-danger" 
+                        title="Verwijder acteur" 
+                        onclick="openDeleteModal('<%= i.actor_id %>', '<%= i.full_name %>')">
                   <i class="bi bi-trash-fill"></i>
                 </button>
               </div>
@@ -38,4 +40,6 @@
 <% } else { %>
   <div class="alert alert-info">Geen acteurs gevonden.</div>
 <% } %>
+
+
 <%- include('partials/footer') %>

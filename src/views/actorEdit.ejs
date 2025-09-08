@@ -2,33 +2,9 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1><%= actor.full_name %> Bewerken</h1>
-  <div>
-    <a href="/actor/<%= actor.actor_id %>" class="btn btn-outline-secondary me-2">
-      <i class="bi bi-eye"></i> Bekijk Details
-    </a>
-    <a href="/actor" class="btn btn-secondary">
-      <i class="bi bi-arrow-left"></i> Terug naar Acteurslijst
-    </a>
-  </div>
 </div>
 
-<% if (errors && errors.length > 0) { %>
-  <div class="alert alert-danger">
-    <h6><i class="bi bi-exclamation-triangle-fill"></i> Er zijn fouten gevonden:</h6>
-    <ul class="mb-0">
-      <% errors.forEach(error => { %>
-        <li><%= error %></li>
-      <% }) %>
-    </ul>
-  </div>
-<% } %>
-
-<div class="card">
-  <div class="card-header">
-    <h5 class="card-title mb-0">
-      <i class="bi bi-pencil-fill"></i> Acteurgegevens Bewerken
-    </h5>
-  </div>
+<div class="">
   <div class="card-body">
     <form method="POST" action="/actor/<%= actor.actor_id %>/edit">
       <div class="row">
@@ -41,7 +17,7 @@
               id="first_name" 
               name="first_name" 
               value="<%= formData.first_name || '' %>"
-              placeholder="Bijv. Tom"
+              placeholder="Pluk"
               required
             >
           </div>
@@ -56,42 +32,17 @@
               id="last_name" 
               name="last_name" 
               value="<%= formData.last_name || '' %>"
-              placeholder="Bijv. Cruise"
+              placeholder="Zwaal"
               required
             >
           </div>
         </div>
       </div>
 
-      <div class="mb-3">
-        <small class="text-muted">
-          <i class="bi bi-info-circle"></i> 
-          Acteur ID: <%= actor.actor_id %> | Laatste update wordt automatisch bijgewerkt
-        </small>
-      </div>
-
       <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-check-circle"></i> Wijzigingen Opslaan
-        </button>
-        <a href="/actor/<%= actor.actor_id %>" class="btn btn-outline-secondary">
-          <i class="bi bi-x-circle"></i> Annuleren
-        </a>
+        <button type="submit" class="btn btn-primary">Opslaan</button>
       </div>
     </form>
-  </div>
-</div>
-
-<div class="mt-4">
-  <div class="card bg-light">
-    <div class="card-body">
-      <h6><i class="bi bi-lightbulb"></i> Let op</h6>
-      <ul class="mb-0">
-        <li>Het wijzigen van de naam heeft geen invloed op bestaande filmkoppelingen</li>
-        <li>De laatste update wordt automatisch ingesteld op het huidige tijdstip</li>
-        <li>Na het opslaan wordt je doorgestuurd naar de detailpagina</li>
-      </ul>
-    </div>
   </div>
 </div>
 

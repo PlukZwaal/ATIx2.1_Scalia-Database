@@ -1,4 +1,5 @@
 const actorService = require('../services/actorService');
+require('dotenv').config();
 
 const actorController = {
   getAll: (req, res, next) => {
@@ -9,10 +10,10 @@ const actorController = {
       res.render('actor', { title: 'Actor', actor });
     });
   },
-  
+
   getById: (req, res, next) => {
     const actorId = Number(req.params.id);
-    
+
     actorService.getById(actorId, (err, actor) => {
       if (err) {
         return next(err);
@@ -22,15 +23,15 @@ const actorController = {
         error.status = 404;
         return next(error);
       }
-      
+
       actorService.getFilmsByActorId(actorId, (err, films) => {
         if (err) {
           console.error('Error fetching films for actor:', err);
           films = [];
         }
-        
-        res.render('actorDetail', { 
-          title: `Details van ${actor.full_name}`, 
+
+        res.render('actorDetail', {
+          title: `Details van ${actor.full_name}`,
           actor: actor,
           films: films || []
         });
@@ -39,7 +40,7 @@ const actorController = {
   },
 
   getCreateForm: (req, res) => {
-    res.render('actorCreate', { 
+    res.render('actorCreate', {
       title: 'Nieuwe Acteur Aanmaken',
       errors: [],
       formData: {}
@@ -75,7 +76,7 @@ const actorController = {
       if (err) {
         return next(err);
       }
-      
+
       // Redirect naar de detail pagina van de nieuwe acteur
       res.redirect(`/actor/${newActor.actor_id}`);
     });
@@ -83,7 +84,7 @@ const actorController = {
 
   getEditForm: (req, res, next) => {
     const actorId = Number(req.params.id);
-    
+
     actorService.getById(actorId, (err, actor) => {
       if (err) {
         return next(err);
@@ -93,7 +94,7 @@ const actorController = {
         error.status = 404;
         return next(error);
       }
-      
+
       res.render('actorEdit', {
         title: `${actor.full_name} Bewerken`,
         actor: actor,
@@ -111,7 +112,6 @@ const actorController = {
     const { first_name, last_name } = req.body;
     const errors = [];
 
-    // Validatie
     if (!first_name || first_name.trim().length === 0) {
       errors.push('Voornaam is verplicht');
     }
@@ -120,7 +120,6 @@ const actorController = {
     }
 
     if (errors.length > 0) {
-      // Haal actor data op voor de form
       return actorService.getById(actorId, (err, actor) => {
         if (err) return next(err);
         if (!actor) {
@@ -147,11 +146,10 @@ const actorController = {
       if (err) {
         return next(err);
       }
-      
-      // Redirect naar de detail pagina van de bewerkte acteur
+
       res.redirect(`/actor/${actorId}`);
     });
-  }
+  },
 };
 
 module.exports = actorController;
