@@ -26,7 +26,7 @@ module.exports = {
     );
   },
 
-  
+
   getById(id, callback) {
     pool.execute(
       `SELECT a.actor_id, a.first_name, a.last_name, a.last_update,
@@ -69,7 +69,7 @@ module.exports = {
 
   create(actorData, callback) {
     const { first_name, last_name } = actorData;
-    
+
     pool.execute(
       `INSERT INTO actor (first_name, last_name, last_update) 
        VALUES (?, ?, NOW())`,
@@ -79,7 +79,7 @@ module.exports = {
           console.error('Database error in create:', err);
           return callback(err, null);
         }
-        
+
         // Return the created actor with the new ID
         const newActor = {
           actor_id: result.insertId,
@@ -87,7 +87,7 @@ module.exports = {
           last_name: last_name,
           full_name: `${first_name} ${last_name}`
         };
-        
+
         console.log('Actor created successfully:', newActor);
         callback(null, newActor);
       }
@@ -96,7 +96,7 @@ module.exports = {
 
   update(id, actorData, callback) {
     const { first_name, last_name } = actorData;
-    
+
     pool.execute(
       `UPDATE actor 
        SET first_name = ?, last_name = ?, last_update = NOW()
@@ -107,13 +107,13 @@ module.exports = {
           console.error('Database error in update:', err);
           return callback(err, null);
         }
-        
+
         if (result.affectedRows === 0) {
           const error = new Error('Acteur niet gevonden');
           error.status = 404;
           return callback(error, null);
         }
-        
+
         // Return the updated actor data
         const updatedActor = {
           actor_id: id,
@@ -121,10 +121,80 @@ module.exports = {
           last_name: last_name,
           full_name: `${first_name} ${last_name}`
         };
-        
+
         console.log('Actor updated successfully:', updatedActor);
         callback(null, updatedActor);
       }
     );
   },
+
+  delete(id, callback) {
+    pool.getConnection((err, conn) => {
+      if (err) {
+        console.error('Database connection error:', err);
+        return callback(err);
+      }
+
+      conn.beginTransaction(err => {
+        if (err) {
+          conn.release();
+          return callback(err);
+        }
+
+        // Eerst verwijderen wij alle koppelingen tussen de acteur en films.
+        conn.execute(
+          `DELETE FROM film_actor WHERE actor_id = ?`,
+          [id],
+          (err) => {
+            if (err) {
+              return conn.rollback(() => {
+                conn.release();
+                console.error('Error deleting from film_actor:', err);
+                callback(err);
+              });
+            }
+
+            // Daarna vewijderen wij de acteur zelf.
+            conn.execute(
+              `DELETE FROM actor WHERE actor_id = ?`,
+              [id],
+              (err, result) => {
+                if (err) {
+                  return conn.rollback(() => {
+                    conn.release();
+                    console.error('Error deleting actor:', err);
+                    callback(err);
+                  });
+                }
+
+                if (result.affectedRows === 0) {
+                  return conn.rollback(() => {
+                    conn.release();
+                    const error = new Error('Acteur niet gevonden');
+                    error.status = 404;
+                    callback(error);
+                  });
+                }
+
+                conn.commit(err => {
+                  if (err) {
+                    return conn.rollback(() => {
+                      conn.release();
+                      console.error('Commit error:', err);
+                      callback(err);
+                    });
+                  }
+                  conn.release();
+                  console.log(`Actor ${id} + koppelingen verwijderd`);
+                  callback(null);
+                });
+              }
+            );
+          }
+        );
+      });
+    });
+  },
+
+
 };

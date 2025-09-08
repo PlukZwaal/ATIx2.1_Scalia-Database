@@ -6,6 +6,7 @@ const actorService = {
   getFilmsByActorId: (id, callback) => actorDao.getFilmsByActorId(id, callback),
   create: (actorData, callback) => actorDao.create(actorData, callback),
   update: (id, actorData, callback) => actorDao.update(id, actorData, callback),
+  delete: (id, callback) => actorDao.delete(id, callback),
 };
 
 module.exports = actorService;

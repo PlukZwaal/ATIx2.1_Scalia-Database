@@ -41,5 +41,38 @@
   <div class="alert alert-info">Geen acteurs gevonden.</div>
 <% } %>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="deleteForm" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Bevestig verwijdering</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Sluiten"></button>
+        </div>
+        <div class="modal-body">
+          <p id="deleteMessage"></p>
+          <div class="mb-3">
+            <label for="staffPassword" class="form-label">Voer het medewerkers wachtwoord in:</label>
+            <input type="password" class="form-control" id="staffPassword" name="password" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+          <button type="submit" class="btn btn-danger">Verwijder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openDeleteModal(actorId, fullName) {
+    document.getElementById('deleteMessage').innerText = 
+      `Weet je zeker dat je ${fullName} wilt verwijderen?`;
+    document.getElementById('deleteForm').action = `/actor/${actorId}/delete`;
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+  }
+</script>
 
 <%- include('partials/footer') %>

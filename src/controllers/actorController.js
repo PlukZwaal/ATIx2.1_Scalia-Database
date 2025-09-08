@@ -76,8 +76,6 @@ const actorController = {
       if (err) {
         return next(err);
       }
-
-      // Redirect naar de detail pagina van de nieuwe acteur
       res.redirect(`/actor/${newActor.actor_id}`);
     });
   },
@@ -150,6 +148,26 @@ const actorController = {
       res.redirect(`/actor/${actorId}`);
     });
   },
+
+delete: (req, res, next) => {
+  const actorId = Number(req.params.id);
+  const { password } = req.body;
+
+  if (password !== process.env.STAFF_PASSWORD) {
+    const error = new Error('Ongeldig wachtwoord');
+    error.status = 401; 
+    return next(error);
+  }
+
+  actorService.delete(actorId, (err) => {
+    if (err) {
+      const error = new Error('Acteur niet gevonden');
+      error.status = 404; 
+      return next(error);
+    }
+    res.redirect('/actor');
+  });
+},
 };
 
 module.exports = actorController;

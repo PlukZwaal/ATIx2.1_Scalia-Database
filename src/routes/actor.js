@@ -8,5 +8,7 @@ router.post('/create', actorController.create);
 router.get('/:id/edit', actorController.getEditForm);
 router.post('/:id/edit', actorController.update);
 router.get('/:id', actorController.getById);
+router.post('/:id/delete', actorController.delete);
+
 
 module.exports = router;
