@@ -1,10 +1,13 @@
 <%- include('partials/header') %>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Nieuwe Acteur Aanmaken</h1>
+  <h1>Acteur aanmaken</h1>
 </div>
 
-<div class="">
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="mb-0">Nieuwe Acteur Aanmaken</h5>
+  </div>
   <div class="card-body">
     <form method="POST" action="/actor/create">
       <div class="row">
@@ -41,6 +44,7 @@
 
       <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Acteur Aanmaken</button>
+        <a href="/actors" class="btn btn-secondary">Annuleren</a>
       </div>
     </form>
   </div>

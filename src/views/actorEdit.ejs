@@ -4,7 +4,10 @@
   <h1><%= actor.full_name %> Bewerken</h1>
 </div>
 
-<div class="">
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="mb-0">Acteur Gegevens</h5>
+  </div>
   <div class="card-body">
     <form method="POST" action="/actor/<%= actor.actor_id %>/edit">
       <div class="row">
@@ -40,9 +43,68 @@
       </div>
 
       <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Opslaan</button>
+        <button type="submit" class="btn btn-primary">Gegevens Opslaan</button>
+        <a href="/actor/<%= actor.actor_id %>" class="btn btn-secondary">Annuleren</a>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Huidige Films <span class="badge bg-primary"><%= currentFilms.length %></span></h5>
+      </div>
+      <div class="card-body">
+        <% if (currentFilms && currentFilms.length > 0) { %>
+          <% currentFilms.forEach(film => { %>
+            <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+              <div>
+                <strong><%= film.title %></strong>
+              </div>
+              <form method="POST" action="/actor/<%= actor.actor_id %>/remove-film" class="d-inline">
+                <input type="hidden" name="film_id" value="<%= film.film_id %>">
+                <button type="submit" class="btn btn-sm btn-outline-danger" title="Film ontkoppelen">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </form>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-muted mb-0">Deze acteur is nog niet gekoppeld aan films.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Beschikbare Films <span class="badge bg-secondary"><%= availableFilms.length %></span></h5>
+      </div>
+      <div class="card-body">
+        <% if (availableFilms && availableFilms.length > 0) { %>
+          <div>
+            <% availableFilms.forEach(film => { %>
+              <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                <div>
+                  <strong><%= film.title %></strong>
+                </div>
+                <form method="POST" action="/actor/<%= actor.actor_id %>/add-film" class="d-inline">
+                  <input type="hidden" name="film_id" value="<%= film.film_id %>">
+                  <button type="submit" class="btn btn-sm btn-outline-success" title="Film koppelen">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </form>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="text-muted mb-0">Alle films zijn al gekoppeld aan deze acteur.</p>
+        <% } %>
+      </div>
+    </div>
   </div>
 </div>
 

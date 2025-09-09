@@ -93,14 +93,31 @@ const actorController = {
         return next(error);
       }
 
-      res.render('actorEdit', {
-        title: `${actor.full_name} Bewerken`,
-        actor: actor,
-        errors: [],
-        formData: {
-          first_name: actor.first_name,
-          last_name: actor.last_name
+      // Haal huidige films en beschikbare films op
+      actorService.getFilmsByActorId(actorId, (err, currentFilms) => {
+        if (err) {
+          console.error('Error fetching current films:', err);
+          currentFilms = [];
         }
+
+        actorService.getAvailableFilmsForActor(actorId, (err, availableFilms) => {
+          if (err) {
+            console.error('Error fetching available films:', err);
+            availableFilms = [];
+          }
+
+          res.render('actorEdit', {
+            title: `${actor.full_name} Bewerken`,
+            actor: actor,
+            currentFilms: currentFilms || [],
+            availableFilms: availableFilms || [],
+            errors: [],
+            formData: {
+              first_name: actor.first_name,
+              last_name: actor.last_name
+            }
+          });
+        });
       });
     });
   },
@@ -126,11 +143,21 @@ const actorController = {
           return next(error);
         }
 
-        res.render('actorEdit', {
-          title: `${actor.full_name} Bewerken`,
-          actor: actor,
-          errors: errors,
-          formData: { first_name, last_name }
+        actorService.getFilmsByActorId(actorId, (err, currentFilms) => {
+          if (err) currentFilms = [];
+
+          actorService.getAvailableFilmsForActor(actorId, (err, availableFilms) => {
+            if (err) availableFilms = [];
+
+            res.render('actorEdit', {
+              title: `${actor.full_name} Bewerken`,
+              actor: actor,
+              currentFilms: currentFilms || [],
+              availableFilms: availableFilms || [],
+              errors: errors,
+              formData: { first_name, last_name }
+            });
+          });
         });
       });
     }
@@ -149,25 +176,55 @@ const actorController = {
     });
   },
 
-delete: (req, res, next) => {
-  const actorId = Number(req.params.id);
-  const { password } = req.body;
+  addToFilm: (req, res, next) => {
+    const actorId = Number(req.params.id);
+    const filmId = Number(req.body.film_id);
 
-  if (password !== process.env.STAFF_PASSWORD) {
-    const error = new Error('Ongeldig wachtwoord');
-    error.status = 401; 
-    return next(error);
-  }
-
-  actorService.delete(actorId, (err) => {
-    if (err) {
-      const error = new Error('Acteur niet gevonden');
-      error.status = 404; 
+    if (!filmId) {
+      const error = new Error('Geen film geselecteerd');
+      error.status = 400;
       return next(error);
     }
-    res.redirect('/actor');
-  });
-},
+
+    actorService.addActorToFilm(actorId, filmId, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(`/actor/${actorId}/edit`);
+    });
+  },
+
+  removeFromFilm: (req, res, next) => {
+    const actorId = Number(req.params.id);
+    const filmId = Number(req.body.film_id);
+
+    actorService.removeActorFromFilm(actorId, filmId, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(`/actor/${actorId}/edit`);
+    });
+  },
+
+  delete: (req, res, next) => {
+    const actorId = Number(req.params.id);
+    const { password } = req.body;
+
+    if (password !== process.env.STAFF_PASSWORD) {
+      const error = new Error('Ongeldig wachtwoord');
+      error.status = 401; 
+      return next(error);
+    }
+
+    actorService.delete(actorId, (err) => {
+      if (err) {
+        const error = new Error('Acteur niet gevonden');
+        error.status = 404; 
+        return next(error);
+      }
+      res.redirect('/actor');
+    });
+  },
 };
 
 module.exports = actorController;

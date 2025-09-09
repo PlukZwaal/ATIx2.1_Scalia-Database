@@ -25,7 +25,6 @@ module.exports = {
     );
   },
 
-
   getById(id, callback) {
     pool.execute(
       `SELECT a.actor_id, a.first_name, a.last_name, a.last_update,
@@ -62,6 +61,67 @@ module.exports = {
         }
         console.log(`Found ${rows.length} films for actor ${id}:`, rows);
         callback(null, rows);
+      }
+    );
+  },
+
+  // Nieuwe methode: Haal alle films op die NIET gekoppeld zijn aan deze acteur
+  getAvailableFilmsForActor(actorId, callback) {
+    pool.execute(
+      `SELECT f.film_id, f.title, f.release_year
+       FROM film f
+       WHERE f.film_id NOT IN (
+         SELECT fa.film_id 
+         FROM film_actor fa 
+         WHERE fa.actor_id = ?
+       )
+       ORDER BY f.title ASC`,
+      [actorId],
+      (err, rows) => {
+        if (err) {
+          console.error('Database error in getAvailableFilmsForActor:', err);
+          return callback(err, null);
+        }
+        callback(null, rows);
+      }
+    );
+  },
+
+  // Nieuwe methode: Koppel acteur aan film
+  addActorToFilm(actorId, filmId, callback) {
+    pool.execute(
+      `INSERT INTO film_actor (actor_id, film_id, last_update) 
+       VALUES (?, ?, NOW())`,
+      [actorId, filmId],
+      (err, result) => {
+        if (err) {
+          console.error('Database error in addActorToFilm:', err);
+          return callback(err, null);
+        }
+        console.log(`Actor ${actorId} gekoppeld aan film ${filmId}`);
+        callback(null, result);
+      }
+    );
+  },
+
+  // Nieuwe methode: Ontkoppel acteur van film
+  removeActorFromFilm(actorId, filmId, callback) {
+    pool.execute(
+      `DELETE FROM film_actor 
+       WHERE actor_id = ? AND film_id = ?`,
+      [actorId, filmId],
+      (err, result) => {
+        if (err) {
+          console.error('Database error in removeActorFromFilm:', err);
+          return callback(err, null);
+        }
+        if (result.affectedRows === 0) {
+          const error = new Error('Koppeling niet gevonden');
+          error.status = 404;
+          return callback(error, null);
+        }
+        console.log(`Actor ${actorId} ontkoppeld van film ${filmId}`);
+        callback(null, result);
       }
     );
   },
@@ -194,6 +254,4 @@ module.exports = {
       });
     });
   },
-
-
 };
