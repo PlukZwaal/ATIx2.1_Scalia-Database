@@ -6,6 +6,8 @@ require('dotenv').config();
 const homeRoutes = require('./src/routes/home');
 const actorRouter = require('./src/routes/actor');
 const aboutRoutes = require('./src/routes/about');
+const authRoutes = require('./src/routes/auth');
+const { requireAuth } = require('./src/middleware/authMiddleware');
 const { logger } = require('./src/util/logger');
 
 const app = express();
@@ -14,9 +16,14 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 
-app.use('/', homeRoutes); 
-app.use('/about', aboutRoutes); 
-app.use('/actor', actorRouter); 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use('/auth', authRoutes);
+app.use('/', requireAuth, homeRoutes); 
+app.use('/about', requireAuth, aboutRoutes); 
+app.use('/actor', requireAuth, actorRouter); 
 
 app.use((err, req, res, next) => {
   const error = {
