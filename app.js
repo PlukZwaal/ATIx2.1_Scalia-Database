@@ -6,6 +6,7 @@ require('dotenv').config();
 const homeRoutes = require('./src/routes/home');
 const actorRouter = require('./src/routes/actor');
 const authRoutes = require('./src/routes/auth');
+const aboutRoutes = require('./src/routes/about');
 const { logger } = require('./src/util/logger');
 const { requireAuth } = require('./src/middleware/auth');
 
@@ -22,8 +23,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/auth', authRoutes);
+app.use('/auth', authRoutes); 
 app.use('/', requireAuth, homeRoutes); 
+app.use('/about', requireAuth, aboutRoutes); 
 app.use('/actor', requireAuth, actorRouter); 
 
 app.use((err, req, res, next) => {
