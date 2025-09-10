@@ -1,7 +1,9 @@
 const authDao = require('../dao/authDao');
 const bcrypt = require('bcrypt');
 
+// Service laag voor authenticatie
 const authService = {
+  // Controleer inloggegevens
   authenticate: (email, password, callback) => {
     authDao.getByEmail(email, (err, user) => {
       if (err) {
@@ -14,6 +16,7 @@ const authService = {
         return callback(error, null);
       }
 
+      // Vergelijk wachtwoord met hash
       bcrypt.compare(password, user.password, (err, isMatch) => {
         if (err) {
           return callback(err, null);
@@ -25,6 +28,7 @@ const authService = {
           return callback(error, null);
         }
 
+        // Stuur alleen relevante gebruikersgegevens terug
         const userData = {
           staff_id: user.staff_id,
           first_name: user.first_name,
@@ -37,6 +41,7 @@ const authService = {
     });
   },
 
+  // Haal gebruiker op via ID
   getById: (id, callback) => authDao.getById(id, callback)
 };
 

@@ -1,6 +1,7 @@
 const pool = require("../db/database");
 
 module.exports = {
+  // Haal actieve medewerker op via email
   getByEmail(email, callback) {
     pool.execute(
       `SELECT staff_id, first_name, last_name, email, password, active
@@ -17,6 +18,7 @@ module.exports = {
     );
   },
 
+  // Haal actieve medewerker op via ID
   getById(id, callback) {
     pool.execute(
       `SELECT staff_id, first_name, last_name, email, active

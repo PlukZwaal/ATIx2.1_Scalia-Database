@@ -1,6 +1,7 @@
 const pool = require("../db/database");
 
 module.exports = {
+  // Haal alle acteurs op met aantal films
   getAll(callback) {
     pool.execute(
       `SELECT
@@ -25,6 +26,7 @@ module.exports = {
     );
   },
 
+  // Haal acteur op via ID
   getById(id, callback) {
     pool.execute(
       `SELECT a.actor_id, a.first_name, a.last_name, a.last_update,
@@ -42,6 +44,7 @@ module.exports = {
     );
   },
 
+  // Haal alle films van een acteur
   getFilmsByActorId(id, callback) {
     console.log('Getting films for actor ID:', id);
     pool.execute(
@@ -65,7 +68,7 @@ module.exports = {
     );
   },
 
-  // Nieuwe methode: Haal alle films op die NIET gekoppeld zijn aan deze acteur
+  // Haal films die niet gekoppeld zijn aan deze acteur
   getAvailableFilmsForActor(actorId, callback) {
     pool.execute(
       `SELECT f.film_id, f.title, f.release_year
@@ -87,7 +90,7 @@ module.exports = {
     );
   },
 
-  // Nieuwe methode: Koppel acteur aan film
+  // Koppel acteur aan film
   addActorToFilm(actorId, filmId, callback) {
     pool.execute(
       `INSERT INTO film_actor (actor_id, film_id, last_update) 
@@ -104,7 +107,7 @@ module.exports = {
     );
   },
 
-  // Nieuwe methode: Ontkoppel acteur van film
+  // Ontkoppel acteur van film
   removeActorFromFilm(actorId, filmId, callback) {
     pool.execute(
       `DELETE FROM film_actor 
@@ -126,6 +129,7 @@ module.exports = {
     );
   },
 
+  // Maak nieuwe acteur aan
   create(actorData, callback) {
     const { first_name, last_name } = actorData;
 
@@ -139,7 +143,6 @@ module.exports = {
           return callback(err, null);
         }
 
-        // Return the created actor with the new ID
         const newActor = {
           actor_id: result.insertId,
           first_name: first_name,
@@ -153,6 +156,7 @@ module.exports = {
     );
   },
 
+  // Update bestaande acteur
   update(id, actorData, callback) {
     const { first_name, last_name } = actorData;
 
@@ -173,7 +177,6 @@ module.exports = {
           return callback(error, null);
         }
 
-        // Return the updated actor data
         const updatedActor = {
           actor_id: id,
           first_name: first_name,
@@ -187,6 +190,7 @@ module.exports = {
     );
   },
 
+  // Verwijder acteur en bijbehorende film koppelingen
   delete(id, callback) {
     pool.getConnection((err, conn) => {
       if (err) {
@@ -200,7 +204,7 @@ module.exports = {
           return callback(err);
         }
 
-        // Eerst verwijderen wij alle koppelingen tussen de acteur en films.
+        // Verwijder eerst alle koppelingen met films
         conn.execute(
           `DELETE FROM film_actor WHERE actor_id = ?`,
           [id],
@@ -213,7 +217,7 @@ module.exports = {
               });
             }
 
-            // Daarna vewijderen wij de acteur zelf.
+            // Verwijder daarna de acteur zelf
             conn.execute(
               `DELETE FROM actor WHERE actor_id = ?`,
               [id],

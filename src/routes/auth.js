@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-router.get('/login', authController.getLoginForm);
-router.post('/login', authController.login);
-router.post('/logout', authController.logout);
+// Routes voor authenticatie
+router.get('/login', authController.getLoginForm); // Toon login formulier
+router.post('/login', authController.login); // Verwerk login
+router.post('/logout', authController.logout); // Uitloggen
 
 module.exports = router;

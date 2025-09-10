@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const authController = {
+  // Toon login formulier
   getLoginForm: (req, res) => {
     res.render('auth/login', {
       title: 'Inloggen',
@@ -11,10 +12,12 @@ const authController = {
     });
   },
 
+  // Verwerk login
   login: (req, res, next) => {
     const { email, password } = req.body;
     const errors = [];
 
+    // Validatie velden
     if (!email || email.trim().length === 0) {
       errors.push('Email is verplicht');
     }
@@ -30,6 +33,7 @@ const authController = {
       });
     }
 
+    // Controleer gebruiker
     authService.authenticate(email.trim(), password, (err, user) => {
       if (err) {
         return res.render('auth/login', {
@@ -39,6 +43,7 @@ const authController = {
         });
       }
 
+      // Maak JWT token aan
       const token = jwt.sign(
         { 
           staff_id: user.staff_id,
@@ -48,9 +53,10 @@ const authController = {
         { expiresIn: '24h' }
       );
 
+      // Zet token in cookie
       res.cookie('auth_token', token, {
         httpOnly: true,
-        secure: false,
+        secure: false, // zou true moeten zijn in productie
         maxAge: 24 * 60 * 60 * 1000
       });
 
@@ -58,6 +64,7 @@ const authController = {
     });
   },
 
+  // Uitloggen (cookie verwijderen)
   logout: (req, res) => {
     res.clearCookie('auth_token');
     res.redirect('/auth/login');

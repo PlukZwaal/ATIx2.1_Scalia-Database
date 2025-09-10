@@ -2,6 +2,7 @@ const actorService = require('../services/actorService');
 require('dotenv').config();
 
 const actorController = {
+  // Haal alle acteurs op en toon overzicht
   getAll: (req, res, next) => {
     actorService.getAll((err, actor) => {
       if (err) {
@@ -11,6 +12,7 @@ const actorController = {
     });
   },
 
+  // Haal 1 acteur op via ID en toon details + films
   getById: (req, res, next) => {
     const actorId = Number(req.params.id);
 
@@ -39,6 +41,7 @@ const actorController = {
     });
   },
 
+  // Toon formulier voor nieuwe acteur
   getCreateForm: (req, res) => {
     res.render('actorCreate', {
       title: 'Nieuwe Acteur Aanmaken',
@@ -47,11 +50,12 @@ const actorController = {
     });
   },
 
+  // Maak nieuwe acteur aan
   create: (req, res, next) => {
     const { first_name, last_name } = req.body;
     const errors = [];
 
-    // Validatie
+    // Validatie velden
     if (!first_name || first_name.trim().length === 0) {
       errors.push('Voornaam is verplicht');
     }
@@ -80,6 +84,7 @@ const actorController = {
     });
   },
 
+  // Toon edit formulier met huidige en beschikbare films
   getEditForm: (req, res, next) => {
     const actorId = Number(req.params.id);
 
@@ -122,11 +127,13 @@ const actorController = {
     });
   },
 
+  // Update bestaande acteur
   update: (req, res, next) => {
     const actorId = Number(req.params.id);
     const { first_name, last_name } = req.body;
     const errors = [];
 
+    // Validatie velden
     if (!first_name || first_name.trim().length === 0) {
       errors.push('Voornaam is verplicht');
     }
@@ -176,6 +183,7 @@ const actorController = {
     });
   },
 
+  // Voeg acteur toe aan een film
   addToFilm: (req, res, next) => {
     const actorId = Number(req.params.id);
     const filmId = Number(req.body.film_id);
@@ -194,6 +202,7 @@ const actorController = {
     });
   },
 
+  // Verwijder acteur uit een film
   removeFromFilm: (req, res, next) => {
     const actorId = Number(req.params.id);
     const filmId = Number(req.body.film_id);
@@ -206,6 +215,7 @@ const actorController = {
     });
   },
 
+  // Verwijder acteur (met wachtwoord check)
   delete: (req, res, next) => {
     const actorId = Number(req.params.id);
     const { password } = req.body;
