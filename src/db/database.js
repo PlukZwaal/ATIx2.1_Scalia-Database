@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mysql = require('mysql2');
 
-// Let op: 'dotenv' wordt alleen lokaal gebruikt.
+// Let op: 'env' wordt alleen lokaal gebruikt.
 // In Azure worden de variabelen via de 'Application Settings' geladen.
 
 const pool = mysql.createPool({
@@ -12,9 +12,6 @@ const pool = mysql.createPool({
   waitForConnections: true, 
   connectionLimit: 10,
   queueLimit: 0,
-  ssl: {
-    rejectUnauthorized: true
-  }
 });
 
 // Exporteer de verbinding zodat je deze in je app kunt gebruiken
