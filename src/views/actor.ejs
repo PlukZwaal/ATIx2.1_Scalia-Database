@@ -1,46 +1,132 @@
 <%- include('partials/header') %>
-<h1 class="mb-4">Acteurslijst</h1>
-<% if (actor && actor.length > 0) { %>
-  <div class="table-responsive">
-    <table class="table table-hover align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Id</th>
-          <th>Volledige naam</th>
-          <th>Aantal films</th>
-          <th>Actie</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% actor.forEach(i => { %>
-          <tr id="actor-row-<%= i.actor_id %>">
-            <td><%= i.actor_id %></td>
-            <td><%= i.full_name %></td>
-            <td><%= i.film_count %></td>
-            <td>
-              <div class="btn-group" role="group">
-                <a href="/actor/<%= i.actor_id %>" class="btn btn-sm btn-outline-primary" title="Bekijk details">
-                  <i class="bi bi-eye-fill"></i>
-                </a>
-                <a href="/actor/<%= i.actor_id %>/edit" class="btn btn-sm btn-outline-warning" title="Bewerk acteur">
-                  <i class="bi bi-pencil-fill"></i>
-                </a>
-                <button class="btn btn-sm btn-outline-danger" 
-                        title="Verwijder acteur" 
-                        onclick="openDeleteModal('<%= i.actor_id %>', '<%= i.full_name %>')">
-                  <i class="bi bi-trash-fill"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Acteurslijst</h1>
+  
+  <!-- View Toggle Button -->
+  <div class="btn-group" role="group" aria-label="View Toggle">
+    <button type="button" class="btn btn-outline-dark" id="tableViewBtn" onclick="switchView('table')">
+      <i class="bi bi-table"></i> Tabel
+    </button>
+    <button type="button" class="btn btn-outline-dark" id="gridViewBtn" onclick="switchView('grid')">
+      <i class="bi bi-grid-3x3-gap"></i> Grid
+    </button>
   </div>
+</div>
+
+<% if (actor && actor.length > 0) { %>
+  
+  <!-- Table View -->
+  <div id="tableView" class="view-container">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Id</th>
+            <th>Volledige naam</th>
+            <th>Aantal films</th>
+            <th>Actie</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% actor.forEach(i => { %>
+            <tr id="actor-row-<%= i.actor_id %>">
+              <td><%= i.actor_id %></td>
+              <td><%= i.full_name %></td>
+              <td><%= i.film_count %></td>
+              <td>
+                <div class="btn-group" role="group">
+                  <a href="/actor/<%= i.actor_id %>" class="btn btn-sm btn-outline-primary" title="Bekijk details">
+                    <i class="bi bi-eye-fill"></i>
+                  </a>
+                  <a href="/actor/<%= i.actor_id %>/edit" class="btn btn-sm btn-outline-warning" title="Bewerk acteur">
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  <button class="btn btn-sm btn-outline-danger" 
+                          title="Verwijder acteur" 
+                          onclick="openDeleteModal('<%= i.actor_id %>', '<%= i.full_name %>')">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Grid View -->
+  <div id="gridView" class="view-container" style="display: none;">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+      <% actor.forEach(i => { %>
+        <div class="col">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+              <small class="text-light">ID: <%= i.actor_id %></small>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-three-dots"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="/actor/<%= i.actor_id %>">
+                      <i class="bi bi-eye-fill me-2 text-primary"></i>Bekijk details
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/actor/<%= i.actor_id %>/edit">
+                      <i class="bi bi-pencil-fill me-2 text-warning"></i>Bewerk acteur
+                    </a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <button class="dropdown-item text-danger" 
+                            onclick="openDeleteModal('<%= i.actor_id %>', '<%= i.full_name %>')">
+                      <i class="bi bi-trash-fill me-2"></i>Verwijder acteur
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="card-body d-flex flex-column text-center">
+              <h5 class="card-title mb-3"><%= i.full_name %></h5>
+              
+              <div class="mt-auto">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                  <i class="bi bi-film me-2"></i>
+                  <span class="fw-bold"><%= i.film_count %></span>
+                  <small class="text-muted ms-1">
+                    film<%= i.film_count !== 1 ? 's' : '' %>
+                  </small>
+                </div>
+                
+                <div class="btn-group w-100" role="group">
+                  <a href="/actor/<%= i.actor_id %>" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-eye-fill"></i>
+                  </a>
+                  <a href="/actor/<%= i.actor_id %>/edit" class="btn btn-outline-warning btn-sm">
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  <button class="btn btn-outline-danger btn-sm" 
+                          onclick="openDeleteModal('<%= i.actor_id %>', '<%= i.full_name %>')">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
 <% } else { %>
   <div class="alert alert-info">Geen acteurs gevonden.</div>
 <% } %>
 
+<!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -65,6 +151,42 @@
 </div>
 
 <script>
+  function switchView(viewType) {
+    const tableView = document.getElementById('tableView');
+    const gridView = document.getElementById('gridView');
+    const tableBtn = document.getElementById('tableViewBtn');
+    const gridBtn = document.getElementById('gridViewBtn');
+    
+    if (viewType === 'table') {
+      tableView.style.display = 'block';
+      gridView.style.display = 'none';
+      tableBtn.classList.remove('btn-outline-dark');
+      tableBtn.classList.add('btn-dark');
+      gridBtn.classList.remove('btn-dark');
+      gridBtn.classList.add('btn-outline-dark');
+      
+      // Hier slaan we de keuze voor tabel op.
+      localStorage.setItem('actorViewPreference', 'table');
+    } else {
+      tableView.style.display = 'none';
+      gridView.style.display = 'block';
+      gridBtn.classList.remove('btn-outline-dark');
+      gridBtn.classList.add('btn-dark');
+      tableBtn.classList.remove('btn-dark');
+      tableBtn.classList.add('btn-outline-dark');
+      
+      // Hier slaan we de keuze voor grid op.
+      localStorage.setItem('actorViewPreference', 'grid');
+    }
+  }
+
+  // Hier laden we de gekozen view bij het laden van de pagina.
+  document.addEventListener('DOMContentLoaded', function() {
+    const savedView = localStorage.getItem('actorViewPreference') || 'table';
+    switchView(savedView);
+  });
+
+  // De delete model
   function openDeleteModal(actorId, fullName) {
     document.getElementById('deleteMessage').innerText = 
       `Weet je zeker dat je ${fullName} wilt verwijderen?`;
