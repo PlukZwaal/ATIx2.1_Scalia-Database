@@ -18,6 +18,20 @@ Dit is een server-side applicatie voor het beheren van acteurs en hun filmkoppel
 4. **Acteurs aanmaken** - Nieuwe acteurs toevoegen
 5. **Acteurs verwijderen** - Met wachtwoord verificatie
 
+## Database Setup
+1. Installeer MySQL
+2. Importeer de Sakila sample database
+3. Stel de database verbinding in via environment variabelen
+
+## Environment Variabelen
+Lokaal ontwikkelen:
+- verander het bestand `example.env` naar `.env` bestand aan in de root van het project en vul de juiste waardes in.
+
+Azure deployment:
+- Ga naar Azure Web App > Configuration > Application settings
+- Voeg dezelfde variabelen toe als hierboven
+- Gebruik de juiste database credentials voor de productie omgeving.
+
 ## Installatie
 ```bash
 npm install
