@@ -16,7 +16,7 @@ const { logger } = require('./src/util/logger');
 
 // Maak Express app aan
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Configureer EJS als template engine
 app.set('view engine', 'ejs');
@@ -60,6 +60,6 @@ app.use((req, res) => {
 });
 
 // Start de server
-app.listen(25060, () => {
-  logger.info(`Server is live op http://localhost:${25060}`); 
+app.listen(PORT, () => {
+  logger.info(`Server is live op http://localhost:${PORT}`); 
 });
