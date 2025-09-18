@@ -60,6 +60,6 @@ app.use((req, res) => {
 });
 
 // Start de server
-app.listen(3000, () => {
-  logger.info(`Server is live op http://localhost:${3000}`); 
+app.listen(25060, () => {
+  logger.info(`Server is live op http://localhost:${25060}`); 
 });
